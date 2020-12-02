@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -32,24 +33,22 @@ import cl.inacap.simpsonsapp.dto.Personaje;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Personaje> personajes = new ArrayList<>();
-    private ListView personajesList;
+    private ListView personajesListView;
     private PersonajesAdapter personajesAdapter;
     private RequestQueue queue;
-    Button btn;
-    Spinner spinner;
+    private Button btn;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn = findViewById(R.id.solicitarbtn);
-        spinner = (Spinner)findViewById(R.id.numero_spinner);
+        this.personajesListView = findViewById(R.id.main_list_view);
+        spinner = findViewById(R.id.numero_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.numero, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
-        this.personajesList = findViewById(R.id.main_list_view);
-
+        btn = findViewById(R.id.solicitarbtn);
         this.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,87 +59,52 @@ public class MainActivity extends AppCompatActivity {
     }
     private void metodoJson(){
         queue = Volley.newRequestQueue(this);
-        this.personajesList = findViewById(R.id.main_list_view);
-        this.personajesAdapter = new PersonajesAdapter(this,
-                R.layout.list_personajes, personajes);
-        this.personajesList.setAdapter(this.personajesAdapter);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                "https://thesimpsonsquoteapi.glitch.me/quotes?count=1",
-                null, new Response.Listener<JSONObject>() {
+        String url = "https://thesimpsonsquoteapi.glitch.me/quotes?count="
+                + this.spinner.getSelectedItem();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-                if (response.length() > 0){
-                    try {
-                        JSONArray jsonArray = new JSONArray(response);
-                        agarrardataso(jsonArray);
-                    }catch (Exception ex){
-                        personajes.clear();
-                    }finally {
-                        Log.e("PERSONAJES QUOTE", "Error de peticion");
-                        personajesAdapter.notifyDataSetChanged();
-                    }
+            public void onResponse(String response) {
+                Log.d("RESPONSE", "onResponse: " + response);
+                try {
+                    initListViewAdapter(agarrarDataso(new JSONArray(response)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                personajes.clear();
-                Log.e("PERSONAJES QUOTE", "Error de respuesta");
-                personajesAdapter.notifyDataSetChanged();
+                Log.e("Peticion", "Error de peticion");
             }
-        }
-        );
-        queue.add(jsonObjectRequest);
+        });
+
+        queue.add(stringRequest);
     }
 
-    private String agarrarUrl() {
-        String numero = spinner.getSelectedItem().toString();
-        int numero2 = Integer.parseInt(numero);
-        String url;
-
-        if (numero2 == 1){
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=1";
-        }else if (numero2 == 2){
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=2";
-        }else if (numero2 == 3){
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=3";
-        }else if (numero2 == 4){
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=4";
-        }else if (numero2 == 5){
-        url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=5";
-        }else if (numero2 == 6){
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=6";
-        }else if (numero2 == 7) {
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=7";
-        }else if (numero2 == 8) {
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=8";
-        }else if (numero2 == 9) {
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=9";
-        }else {
-            url = "https://thesimpsonsquoteapi.glitch.me/quotes?count=10";
-        }
-        return url;
-    }
-
-    public void agarrardataso(JSONArray jsonArray){
+    private List<Personaje> agarrarDataso(JSONArray jsonArray) {
+        List<Personaje> personajes = new ArrayList();
         try {
-            for (int i = 0; i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String imagen = jsonObject.getString("image");
-                String nombre = jsonObject.getString("character");
-                String frase = jsonObject.getString("quote");
                 Personaje p = new Personaje();
-                p.setCharacter(nombre);
-                p.setImage(imagen);
-                p.setQuote(frase);
+                p.setCharacter(jsonObject.getString("character"));
+                p.setImage(jsonObject.getString("image"));
+                p.setQuote(jsonObject.getString("quote"));
                 personajes.add(p);
-
             }
-        }catch (Exception ex){
-            personajes.clear();
+            return personajes;
+        } catch (Exception ex) {
             Log.e("PERSONAJES QUOTE", "Error de dataso");
+            return null;
         }
+    }
+
+
+
+    private void initListViewAdapter(List<Personaje> personajes) {
+        this.personajesAdapter = new PersonajesAdapter(this,
+                R.layout.list_personajes, personajes);
+        this.personajesListView.setAdapter(this.personajesAdapter);
     }
 
 
