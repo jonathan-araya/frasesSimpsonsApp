@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_top_default">20dp</dimen>
+    <dimen name="margin_left_Txt">50dp</dimen>
+    <dimen name="margin_left_spinner">20dp</dimen>
+    <dimen name="ancho_img">100dp</dimen>
+    <dimen name="alto_img">180dp</dimen>
+    <dimen name="margin_toolbar">10dp</dimen>
+    <dimen name="ancho_logo_toolbar">200dp</dimen>
+    <dimen name="largo_logo_toolbar">88dp</dimen>
+    <dimen name="margin_logo_toolbar">106dp</dimen>
+</resources>

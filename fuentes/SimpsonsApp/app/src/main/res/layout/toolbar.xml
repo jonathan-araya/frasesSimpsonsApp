@@ -12,10 +12,12 @@
     >
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="88dp"
+        android:layout_width="@dimen/ancho_logo_toolbar"
+        android:layout_height="@dimen/largo_logo_toolbar"
         android:src="@drawable/ic_logo_the_simpsons"
-        android:layout_marginLeft="106dp">
+        android:layout_marginLeft="@dimen/margin_logo_toolbar"
+        android:layout_marginTop="@dimen/margin_toolbar"
+        android:layout_marginBottom="@dimen/margin_toolbar">
     </ImageView>
 
 </androidx.appcompat.widget.Toolbar>

@@ -12,30 +12,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_top_default"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:text="cantidad de frases a mostrar:">
+            android:layout_marginLeft="@dimen/margin_left_Txt"
+            android:text="@string/cantidad_Spn">
         </TextView>
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/margin_top_default"
             android:id="@+id/numero_spinner">
         </Spinner>
 
     </LinearLayout>
 
     <Button
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_top_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="solicitar consejo"
+        android:text="@string/solicitar_btn"
         android:textStyle="bold"
         android:textColor="@color/purple_700"
         android:backgroundTint="@color/background"
@@ -44,7 +44,7 @@
     </Button>
 
     <ListView
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_top_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/main_list_view">

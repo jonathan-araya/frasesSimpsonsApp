@@ -42,7 +42,7 @@ public class PersonajesAdapter extends ArrayAdapter {
         quoteTxt.setText(personajes.get(position).getQuote());
         nombreTxt.setText(personajes.get(position).getCharacter());
         Picasso.get().load(this.personajes.get(position).getImage())
-                .resize(200, 200)
+                .resize(190, 300)
                 .centerCrop().into(image_view);
         return rowView;
     }
